@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -87,7 +88,6 @@ fun MoviesListScreen(
 ) {
     Scaffold(
         containerColor = BackgroundDark,
-        contentWindowInsets = WindowInsets.statusBars,
         topBar = {
             Column {
                 HeaderBar(onFilterClick = onFilterClick)
@@ -143,7 +143,7 @@ private fun HeaderBar(
                 containerColor = PremiereRed,
                 contentColor = Color.White
             ),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
         ) {
             Text(
                 text = "⚙ Filter",
@@ -211,7 +211,7 @@ private fun SortDropdown(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = " ↓  ▼",
+                    text = " ↓ ▼",
                     color = TextCaption,
                     fontSize = 11.sp
                 )
@@ -221,6 +221,7 @@ private fun SortDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            shape = RoundedCornerShape(8.dp),
             containerColor = SurfaceCard
         ) {
             MovieSort.entries.forEach { sort ->
@@ -228,7 +229,8 @@ private fun SortDropdown(
                     text = {
                         Text(
                             text = sort.label(),
-                            color = Color.White
+                            color = if (sort == selectedSort) PremiereRed else Color.White,
+                            fontWeight = if (sort == selectedSort) FontWeight.Bold else FontWeight.Normal
                         )
                     },
                     onClick = {

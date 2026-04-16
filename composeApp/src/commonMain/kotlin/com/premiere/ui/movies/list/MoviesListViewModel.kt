@@ -5,6 +5,7 @@ import com.premiere.mvi.BaseViewModel
 import com.premiere.repository.MovieFilters
 import com.premiere.repository.MovieSort
 import com.premiere.repository.MoviesRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
@@ -52,6 +53,7 @@ class MoviesListViewModel(
         }
 
         viewModelScope.launch {
+            delay(2000) // Just for demonstration purposes for loading bar
             try {
                 val response = moviesRepository.getMovies(
                     filters = filters,
