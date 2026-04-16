@@ -21,7 +21,7 @@ class MovieDetailsViewModel(
         loadMovieDetails()
     }
 
-    override fun onIntent(intent: MovieDetailsContract.Intent) {
+    override fun handleIntent(intent: MovieDetailsContract.Intent) {
         when (intent) {
             MovieDetailsContract.Intent.Retry -> loadMovieDetails()
             MovieDetailsContract.Intent.BackClicked -> emitEffect(MovieDetailsContract.Effect.NavigateBack)

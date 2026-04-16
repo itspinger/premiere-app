@@ -17,11 +17,11 @@ data class MovieFilters(
     val minRating: Float? = null
 )
 
-enum class MovieSort(val apiValue: String, val apiOrder: String) {
-    RATING(apiValue = "imdb_rating", apiOrder = "desc"),
-    YEAR(apiValue = "year", apiOrder = "desc"),
-    TITLE(apiValue = "title", apiOrder = "asc"),
-    POPULARITY(apiValue = "popularity", apiOrder = "desc")
+enum class MovieSort(val apiValue: String, val apiOrder: String, val label: String) {
+    RATING(apiValue = "imdb_rating", apiOrder = "desc", label = "Rating"),
+    YEAR(apiValue = "year", apiOrder = "desc", label = "Year"),
+    TITLE(apiValue = "title", apiOrder = "asc", label = "Title"),
+    POPULARITY(apiValue = "popularity", apiOrder = "desc", label = "Popularity")
 }
 
 interface MoviesRepository {

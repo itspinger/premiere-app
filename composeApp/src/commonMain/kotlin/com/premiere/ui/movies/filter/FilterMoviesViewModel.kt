@@ -27,7 +27,7 @@ class FilterMoviesViewModel(
         loadGenres()
     }
 
-    override fun onIntent(intent: FilterMoviesContract.Intent) {
+    override fun handleIntent(intent: FilterMoviesContract.Intent) {
         when (intent) {
             is FilterMoviesContract.Intent.SearchChanged -> {
                 setState { it.copy(searchQuery = intent.query) }

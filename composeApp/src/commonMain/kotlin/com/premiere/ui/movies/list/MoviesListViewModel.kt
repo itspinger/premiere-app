@@ -5,7 +5,6 @@ import com.premiere.mvi.BaseViewModel
 import com.premiere.repository.MovieFilters
 import com.premiere.repository.MovieSort
 import com.premiere.repository.MoviesRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
@@ -18,7 +17,7 @@ class MoviesListViewModel(
         onIntent(MoviesListContract.Intent.Load)
     }
 
-    override fun onIntent(intent: MoviesListContract.Intent) {
+    override fun handleIntent(intent: MoviesListContract.Intent) {
         when (intent) {
             MoviesListContract.Intent.Load -> loadMovies()
             MoviesListContract.Intent.Retry -> loadMovies()
@@ -53,12 +52,15 @@ class MoviesListViewModel(
         }
 
         viewModelScope.launch {
-            delay(2000) // Just for demonstration purposes for loading bar
+//            delay(2000) // Just for demonstration purposes for loading bar
             try {
                 val response = moviesRepository.getMovies(
                     filters = filters,
                     sort = sort
                 )
+
+                // Simulate exception as well
+                //throw IllegalArgumentException("Unable to load movies")
 
                 setState {
                     it.copy(

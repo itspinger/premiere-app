@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -205,7 +203,7 @@ private fun SortDropdown(
                     fontSize = 11.sp
                 )
                 Text(
-                    text = selectedSort.label(),
+                    text = selectedSort.label,
                     color = Color.White,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
@@ -228,7 +226,7 @@ private fun SortDropdown(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = sort.label(),
+                            text = sort.label,
                             color = if (sort == selectedSort) PremiereRed else Color.White,
                             fontWeight = if (sort == selectedSort) FontWeight.Bold else FontWeight.Normal
                         )
@@ -260,19 +258,17 @@ private fun MoviesListContent(
         }
 
         state.errorMessage != null -> {
-            MessageState(
+            ErrorRetryBox(
                 title = "Failed to load movies",
                 message = state.errorMessage,
-                actionLabel = "Retry",
                 onAction = onRetry
             )
         }
 
         state.isEmpty -> {
-            MessageState(
+            ErrorRetryBox(
                 title = "No movies found",
                 message = "Try adjusting your filters",
-                actionLabel = "Retry",
                 onAction = onRetry
             )
         }
@@ -292,6 +288,7 @@ private fun MoviesListContent(
                         onClick = { onMovieClick(movie.id) }
                     )
                 }
+
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }
@@ -299,35 +296,39 @@ private fun MoviesListContent(
 }
 
 @Composable
-private fun MessageState(
+private fun ErrorRetryBox(
     title: String,
     message: String,
-    actionLabel: String,
     onAction: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 64.dp, start = 24.dp, end = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = title,
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = message,
-            color = TextFaded,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Button(
-            onClick = onAction,
-            colors = ButtonDefaults.buttonColors(containerColor = PremiereRed)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(actionLabel)
+            Text(
+                text = title,
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = message,
+                color = TextFaded,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Button(
+                onClick = onAction,
+                colors = ButtonDefaults.buttonColors(containerColor = PremiereRed)
+            ) {
+                Text("Retry")
+            }
         }
     }
 }
@@ -475,13 +476,6 @@ private fun GenreChip(
             )
         )
     }
-}
-
-private fun MovieSort.label(): String = when (this) {
-    MovieSort.RATING -> "Rating"
-    MovieSort.YEAR -> "Year"
-    MovieSort.TITLE -> "Title"
-    MovieSort.POPULARITY -> "Popularity"
 }
 
 private fun formatVotes(votes: Int?): String {
