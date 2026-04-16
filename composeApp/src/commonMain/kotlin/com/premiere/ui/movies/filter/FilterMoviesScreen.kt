@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.premiere.ui.theme.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -47,13 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.premiere.util.formatToString
 
-private val FilterScreenBackground = Color(0xFF111111)
-private val FilterHeaderBackground = Color(0xFF1B1A33)
-private val FieldBackground = Color(0xFF2B2B48)
-private val FilterRed = Color(0xFFE50914)
-private val FilterMuted = Color(0xFFA0A0A0)
-private val FilterChipColor = Color(0xFF2D2D4A)
-private val FilterChipSelected = Color(0xFFB91C25)
 
 @Composable
 fun FilterMoviesRoute(
@@ -87,13 +81,13 @@ fun FilterMoviesScreen(
     onBack: () -> Unit
 ) {
     Scaffold(
-        containerColor = FilterScreenBackground,
+        containerColor = BackgroundDark,
         contentWindowInsets = WindowInsets.statusBars,
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(FilterHeaderBackground)
+                    .background(NavBackground)
                     .statusBarsPadding()
                     .padding(horizontal = 18.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -119,7 +113,7 @@ fun FilterMoviesScreen(
                 TextButton(onClick = onClearAll) {
                     Text(
                         text = "Clear All",
-                        color = FilterRed,
+                        color = PremiereRed,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -131,17 +125,17 @@ fun FilterMoviesScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(FilterScreenBackground)
+                    .background(BackgroundDark)
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = FilterRed)
+                CircularProgressIndicator(color = PremiereRed)
             }
         } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(FilterScreenBackground)
+                    .background(BackgroundDark)
                     .padding(innerPadding)
                     .padding(horizontal = 20.dp, vertical = 28.dp)
                     .navigationBarsPadding()
@@ -182,7 +176,7 @@ fun FilterMoviesScreen(
                 state.errorMessage?.let { message ->
                     Text(
                         text = message,
-                        color = FilterRed,
+                        color = PremiereRed,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -194,7 +188,7 @@ fun FilterMoviesScreen(
                         .height(74.dp)
                         .padding(bottom = 8.dp),
                     shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = FilterRed)
+                    colors = ButtonDefaults.buttonColors(containerColor = PremiereRed)
                 ) {
                     Text(
                         text = "Apply Filters",
@@ -215,7 +209,7 @@ private fun FilterSection(
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Text(
             text = title,
-            color = Color(0xFFE1E1E1),
+            color = TextBright,
             fontSize = 20.sp,
             fontWeight = FontWeight.ExtraBold,
             letterSpacing = 0.5.sp
@@ -259,7 +253,7 @@ private fun YearRangeSection(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "From",
-                color = FilterMuted,
+                color = TextMuted,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -271,7 +265,7 @@ private fun YearRangeSection(
 
         Text(
             text = "—",
-            color = FilterMuted,
+            color = TextMuted,
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(top = 28.dp)
         )
@@ -279,7 +273,7 @@ private fun YearRangeSection(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "To",
-                color = FilterMuted,
+                color = TextMuted,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -306,9 +300,9 @@ private fun RatingSection(
                 valueRange = 0f..10f,
                 modifier = Modifier.weight(1f),
                 colors = SliderDefaults.colors(
-                    thumbColor = FilterRed,
+                    thumbColor = PremiereRed,
                     activeTrackColor = Color.White,
-                    inactiveTrackColor = Color(0xFF6B6B6B)
+                    inactiveTrackColor = SliderInactive
                 )
             )
 
@@ -316,7 +310,7 @@ private fun RatingSection(
 
             Box(
                 modifier = Modifier
-                    .background(FieldBackground, RoundedCornerShape(16.dp))
+                    .background(SurfaceElevated, RoundedCornerShape(16.dp))
                     .padding(horizontal = 18.dp, vertical = 14.dp)
             ) {
                 Text(
@@ -343,7 +337,7 @@ private fun StyledTextField(
         placeholder = {
             Text(
                 text = placeholder,
-                color = FilterMuted,
+                color = TextMuted,
                 fontSize = 17.sp
             )
         },
@@ -387,7 +381,7 @@ private fun GenreChip(
     Box(
         modifier = Modifier
             .background(
-                color = if (selected) FilterChipSelected else FilterChipColor,
+                color = if (selected) PremiereRedDark else SurfaceChip,
                 shape = RoundedCornerShape(22.dp)
             )
             .clickable(onClick = onClick)
@@ -395,7 +389,7 @@ private fun GenreChip(
     ) {
         Text(
             text = name,
-            color = Color(0xFFE2E2E2),
+            color = TextBright,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
@@ -404,10 +398,10 @@ private fun GenreChip(
 
 @Composable
 private fun filterFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = FieldBackground,
-    unfocusedContainerColor = FieldBackground,
-    disabledContainerColor = FieldBackground,
-    errorContainerColor = FieldBackground,
+    focusedContainerColor = SurfaceElevated,
+    unfocusedContainerColor = SurfaceElevated,
+    disabledContainerColor = SurfaceElevated,
+    errorContainerColor = SurfaceElevated,
     focusedTextColor = Color.White,
     unfocusedTextColor = Color.White,
     disabledTextColor = Color.White,
@@ -415,6 +409,6 @@ private fun filterFieldColors() = TextFieldDefaults.colors(
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
-    focusedPlaceholderColor = FilterMuted,
-    unfocusedPlaceholderColor = FilterMuted
+    focusedPlaceholderColor = TextMuted,
+    unfocusedPlaceholderColor = TextMuted
 )

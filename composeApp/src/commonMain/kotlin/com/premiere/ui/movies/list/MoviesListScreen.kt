@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -43,28 +42,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.premiere.model.MovieSummary
 import com.premiere.repository.MovieSort
+import com.premiere.ui.theme.BackgroundDark
+import com.premiere.ui.theme.ChipGray
+import com.premiere.ui.theme.NavBackground
+import com.premiere.ui.theme.PremiereGold
+import com.premiere.ui.theme.PremiereRed
+import com.premiere.ui.theme.SurfaceCard
+import com.premiere.ui.theme.SurfaceElevated
+import com.premiere.ui.theme.TextCaption
+import com.premiere.ui.theme.TextFaded
+import com.premiere.ui.theme.TextLabel
+import com.premiere.ui.theme.TextMeta
+import com.premiere.ui.theme.TextSecondary
 import com.premiere.util.formatToString
 
-private val ScreenBackground = Color(0xFF111111)
-private val HeaderBackground = Color(0xFF1B1A33)
-private val CardBackground = Color(0xFF202038)
-private val ChipBackground = Color(0xFF3B3B3B)
-private val FilterRed = Color(0xFFE50914)
-private val RatingGold = Color(0xFFF5C518)
-private val MutedText = Color(0xFF8A8A8A)
-
 @Composable
-fun MoviesListRoute(
-    viewModel: MoviesListViewModel
-) {
+fun MoviesListRoute(viewModel: MoviesListViewModel) {
     val state by viewModel.state.collectAsState()
 
     MoviesListScreen(
@@ -85,7 +86,7 @@ fun MoviesListScreen(
     onFilterClick: () -> Unit
 ) {
     Scaffold(
-        containerColor = ScreenBackground,
+        containerColor = BackgroundDark,
         contentWindowInsets = WindowInsets.statusBars,
         topBar = {
             Column {
@@ -101,7 +102,7 @@ fun MoviesListScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(ScreenBackground)
+                .background(BackgroundDark)
                 .padding(innerPadding)
                 .navigationBarsPadding()
         ) {
@@ -121,7 +122,7 @@ private fun HeaderBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(HeaderBackground)
+            .background(NavBackground)
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -139,7 +140,7 @@ private fun HeaderBar(
             onClick = onFilterClick,
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = FilterRed,
+                containerColor = PremiereRed,
                 contentColor = Color.White
             ),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
@@ -162,7 +163,7 @@ private fun SortBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(ScreenBackground)
+            .background(BackgroundDark)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -175,7 +176,7 @@ private fun SortBar(
 
         Text(
             text = "$totalCount movies",
-            color = MutedText,
+            color = TextFaded,
             fontSize = 11.sp
         )
     }
@@ -192,7 +193,7 @@ private fun SortDropdown(
         Surface(
             modifier = Modifier.clickable { expanded = true },
             shape = RoundedCornerShape(18.dp),
-            color = Color(0xFF2B2B48)
+            color = SurfaceElevated
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
@@ -200,7 +201,7 @@ private fun SortDropdown(
             ) {
                 Text(
                     text = "Sort: ",
-                    color = Color(0xFFD1D1D1),
+                    color = TextLabel,
                     fontSize = 11.sp
                 )
                 Text(
@@ -211,7 +212,7 @@ private fun SortDropdown(
                 )
                 Text(
                     text = " ↓  ▼",
-                    color = Color(0xFFB6B6B6),
+                    color = TextCaption,
                     fontSize = 11.sp
                 )
             }
@@ -220,7 +221,7 @@ private fun SortDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            containerColor = CardBackground
+            containerColor = SurfaceCard
         ) {
             MovieSort.entries.forEach { sort ->
                 DropdownMenuItem(
@@ -252,7 +253,7 @@ private fun MoviesListContent(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = FilterRed)
+                CircularProgressIndicator(color = PremiereRed)
             }
         }
 
@@ -317,12 +318,12 @@ private fun MessageState(
         )
         Text(
             text = message,
-            color = MutedText,
+            color = TextFaded,
             style = MaterialTheme.typography.bodyLarge
         )
         Button(
             onClick = onAction,
-            colors = ButtonDefaults.buttonColors(containerColor = FilterRed)
+            colors = ButtonDefaults.buttonColors(containerColor = PremiereRed)
         ) {
             Text(actionLabel)
         }
@@ -339,7 +340,7 @@ private fun MovieCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(CardBackground)
+            .background(SurfaceCard)
             .clickable(onClick = onClick)
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -371,7 +372,7 @@ private fun MovieCard(
 
             Text(
                 text = movie.year?.toString() ?: "Unknown year",
-                color = Color(0xFFB0B0B0),
+                color = TextMeta,
                 style = TextStyle(
                     fontSize = 12.sp,
                     lineHeight = 12.sp
@@ -386,7 +387,7 @@ private fun MovieCard(
             ) {
                 Text(
                     text = "★ ${movie.imdbRating?.let { it.formatToString() } ?: "-"}",
-                    color = RatingGold,
+                    color = PremiereGold,
                     style = TextStyle(
                         fontSize = 13.sp,
                         lineHeight = 13.sp
@@ -395,7 +396,7 @@ private fun MovieCard(
                 )
                 Text(
                     text = "${formatVotes(movie.imdbVotes)} votes",
-                    color = MutedText,
+                    color = TextFaded,
                     style = TextStyle(
                         fontSize = 11.sp,
                         lineHeight = 11.sp
@@ -440,7 +441,7 @@ private fun PosterImage(
                 .width(55.dp)
                 .height(80.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF2B2B48)),
+                .background(SurfaceElevated),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -460,12 +461,12 @@ private fun GenreChip(
     Box(
         modifier = Modifier
             .clip(CircleShape)
-            .background(ChipBackground)
+            .background(ChipGray)
             .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
         Text(
             text = name,
-            color = Color(0xFFD6D6D6),
+            color = TextSecondary,
             style = TextStyle(
                 fontSize = 10.sp,
                 lineHeight = 10.sp

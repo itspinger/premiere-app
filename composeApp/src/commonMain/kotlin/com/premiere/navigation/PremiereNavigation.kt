@@ -98,6 +98,7 @@ fun PremiereNavigation() {
                                 ?.set(APPLIED_FILTERS_KEY, Json.encodeToString(effect.filters))
                             navController.navigateUp()
                         }
+
                         FilterMoviesContract.Effect.NavigateBack -> {
                             navController.navigateUp()
                         }

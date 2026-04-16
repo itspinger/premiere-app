@@ -1,4 +1,5 @@
 package com.premiere.ui.movies.details
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,14 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -36,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.premiere.ui.theme.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalUriHandler
@@ -49,13 +49,6 @@ import com.premiere.model.MovieImage
 import com.premiere.model.Person
 import com.premiere.util.formatToString
 
-private val DetailBackground = Color(0xFF121212)
-private val DetailSurface = Color(0xFF1E1E2E)
-private val DetailHeader = Color(0xFF1A1A2E)
-private val DetailMuted = Color(0xFF999999)
-private val DetailBlue = Color(0xFF4DABF7)
-private val DetailRed = Color(0xFFE50914)
-private val DetailGold = Color(0xFFF5C518)
 
 @Composable
 fun MovieDetailsRoute(
@@ -96,10 +89,10 @@ fun MovieDetailsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(DetailBackground),
+                    .background(BackgroundDark),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = DetailRed)
+                CircularProgressIndicator(color = PremiereRed)
             }
         }
 
@@ -107,7 +100,7 @@ fun MovieDetailsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(DetailBackground)
+                    .background(BackgroundDark)
                     .padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -121,13 +114,13 @@ fun MovieDetailsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = state.errorMessage,
-                    color = DetailMuted,
+                    color = TextDim,
                     fontSize = 13.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(containerColor = DetailRed)
+                    colors = ButtonDefaults.buttonColors(containerColor = PremiereRed)
                 ) {
                     Text("Retry")
                 }
@@ -159,7 +152,7 @@ private fun MovieDetailsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DetailBackground)
+            .background(BackgroundDark)
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
     ) {
@@ -186,7 +179,7 @@ private fun MovieDetailsContent(
             SectionTitle("Overview")
             Text(
                 text = movie.overview ?: "No description available.",
-                color = Color(0xFFBBBBBB),
+                color = TextBody,
                 style = TextStyle(fontSize = 13.sp, lineHeight = 21.sp),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -220,7 +213,7 @@ private fun DetailBackdrop(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
-            .background(DetailHeader)
+            .background(SurfaceHeader)
     ) {
         val backdropUrl = backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" }
 
@@ -239,7 +232,7 @@ private fun DetailBackdrop(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, DetailBackground),
+                        colors = listOf(Color.Transparent, BackgroundDark),
                         startY = 120f
                     )
                 )
@@ -264,7 +257,7 @@ private fun DetailBackdrop(
                     .align(Alignment.Center)
                     .size(60.dp)
                     .clip(CircleShape)
-                    .background(DetailRed.copy(alpha = 0.9f))
+                    .background(PremiereRed.copy(alpha = 0.9f))
                     .clickable(onClick = onPlayTrailer),
                 contentAlignment = Alignment.Center
             ) {
@@ -292,7 +285,7 @@ private fun DetailHeader(
                 .width(95.dp)
                 .height(140.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .border(2.dp, Color(0xFF222222), RoundedCornerShape(8.dp)),
+                .border(2.dp, BorderDark, RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         )
 
@@ -313,7 +306,7 @@ private fun DetailHeader(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "${movie.year ?: "—"} • ${movie.runtime?.let { "$it min" } ?: "—"}",
-                color = DetailMuted,
+                color = TextDim,
                 fontSize = 12.sp
             )
         }
@@ -338,18 +331,18 @@ private fun RatingsRow(movie: MovieDetail) {
     ) {
         Text(
             text = "⭐ ${movie.imdbRating?.let { it.formatToString() } ?: "—"}",
-            color = DetailGold,
+            color = PremiereGold,
             fontSize = 18.sp,
             fontWeight = FontWeight.ExtraBold
         )
         Text(
             text = "/10",
-            color = Color(0xFF777777),
+            color = TextSubdued,
             fontSize = 11.sp
         )
         Text(
             text = movie.imdbVotes?.let { "${formatVotes(it)} votes" } ?: "",
-            color = DetailMuted,
+            color = TextDim,
             fontSize = 11.sp
         )
 
@@ -357,8 +350,8 @@ private fun RatingsRow(movie: MovieDetail) {
 
         if (movie.tmdbRating != null) {
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("TMDB", color = DetailBlue, fontSize = 11.sp)
-                Text(movie.tmdbRating.formatToString(), color = DetailBlue, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Text("TMDB", color = PremiereBlue, fontSize = 11.sp)
+                Text(movie.tmdbRating.formatToString(), color = PremiereBlue, fontSize = 13.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -374,7 +367,7 @@ private fun DetailGenres(movie: MovieDetail) {
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .background(DetailRed)
+                    .background(PremiereRed)
                     .padding(horizontal = 14.dp, vertical = 5.dp)
             ) {
                 Text(
@@ -392,7 +385,7 @@ private fun DetailGenres(movie: MovieDetail) {
 private fun SectionTitle(title: String) {
     Text(
         text = title,
-        color = Color(0xFFDDDDDD),
+        color = TextPrimary,
         style = TextStyle(
             fontSize = 13.sp,
             lineHeight = 13.sp,
@@ -440,14 +433,14 @@ private fun InfoBadge(
 ) {
     Column(
         modifier = modifier
-            .background(DetailSurface, RoundedCornerShape(10.dp))
+            .background(SurfaceDeep, RoundedCornerShape(10.dp))
             .padding(horizontal = 14.dp, vertical = 10.dp)
             .height(64.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = label,
-            color = DetailMuted,
+            color = TextDim,
             fontSize = 10.sp
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -502,7 +495,7 @@ private fun ActorsList(actors: List<Person>) {
                     modifier = Modifier
                         .size(44.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF2A2A3E)),
+                        .background(SurfaceAvatar),
                     contentScale = ContentScale.Crop
                 )
                 Text(
@@ -518,7 +511,7 @@ private fun ActorsList(actors: List<Person>) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(DetailSurface)
+                        .background(SurfaceDeep)
                 )
             }
         }
