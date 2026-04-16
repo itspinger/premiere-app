@@ -143,15 +143,3 @@ dependencies {
 room {
     schemaDirectory("$projectDir/schemas")
 }
-
-compose.desktop {
-    application {
-        mainClass = "com.premiere.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.premiere"
-            packageVersion = "1.0.0"
-        }
-    }
-}
