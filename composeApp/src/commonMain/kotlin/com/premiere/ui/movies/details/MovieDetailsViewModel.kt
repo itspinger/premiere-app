@@ -1,18 +1,21 @@
 package com.premiere.ui.movies.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.premiere.model.Video
 import com.premiere.mvi.BaseViewModel
+import com.premiere.navigation.imdbId
 import com.premiere.repository.MoviesRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
-    private val imdbId: String,
+    savedStateHandle: SavedStateHandle,
     private val moviesRepository: MoviesRepository
 ) : BaseViewModel<MovieDetailsContract.State, MovieDetailsContract.Intent, MovieDetailsContract.Effect>(
     initialState = MovieDetailsContract.State(isLoading = true)
 ) {
+    private val imdbId: String = savedStateHandle.imdbId
 
     init {
         loadMovieDetails()

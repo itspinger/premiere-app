@@ -1,22 +1,26 @@
 package com.premiere.ui.movies.filter
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.premiere.mvi.BaseViewModel
+import com.premiere.navigation.movieFilters
 import com.premiere.repository.GenresRepository
 import com.premiere.repository.MovieFilters
 import kotlinx.coroutines.launch
 
 class FilterMoviesViewModel(
-    initialFilters: MovieFilters,
+    savedStateHandle: SavedStateHandle,
     private val genresRepository: GenresRepository
 ) : BaseViewModel<FilterMoviesContract.State, FilterMoviesContract.Intent, FilterMoviesContract.Effect>(
-    initialState = FilterMoviesContract.State(
-        searchQuery = initialFilters.query.orEmpty(),
-        selectedGenreId = initialFilters.genreId,
-        minYear = initialFilters.minYear?.toString() ?: "1920",
-        maxYear = initialFilters.maxYear?.toString() ?: "2025",
-        minRating = initialFilters.minRating ?: 0f
-    )
+    initialState = savedStateHandle.movieFilters.let { filters ->
+        FilterMoviesContract.State(
+            searchQuery = filters.query.orEmpty(),
+            selectedGenreId = filters.genreId,
+            minYear = filters.minYear?.toString() ?: "1920",
+            maxYear = filters.maxYear?.toString() ?: "2025",
+            minRating = filters.minRating ?: 0f
+        )
+    }
 ) {
 
     init {

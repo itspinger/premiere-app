@@ -16,23 +16,27 @@ import com.premiere.ui.movies.filter.FilterMoviesViewModel
 import com.premiere.ui.movies.list.MoviesListContract
 import com.premiere.ui.movies.list.MoviesListRoute
 import com.premiere.ui.movies.list.MoviesListViewModel
+import androidx.lifecycle.SavedStateHandle
 import io.ktor.http.decodeURLQueryComponent
 import io.ktor.http.encodeURLParameter
 import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 private const val MOVIES_ROUTE = "movies"
 private const val FILTER_ROUTE = "filter"
 private const val DETAILS_ROUTE = "details"
 private const val FILTERS_ARG = "filters"
+private const val IMDB_ID_ARG = "imdbId"
 private const val APPLIED_FILTERS_KEY = "applied_filters"
 
-private fun readStringArg(arguments: Any?, key: String): String? =
-    when (arguments) {
-        is Map<*, *> -> arguments[key] as? String
-        else -> null
-    }
+internal val SavedStateHandle.imdbId: String
+    get() = checkNotNull(this[IMDB_ID_ARG]) { "imdbId nav argument is missing" }
+
+internal val SavedStateHandle.movieFilters: MovieFilters
+    get() = this.get<String>(FILTERS_ARG)
+        ?.decodeURLQueryComponent()
+        ?.let { Json.decodeFromString(it) }
+        ?: MovieFilters()
 
 @Composable
 fun PremiereNavigation() {
@@ -82,12 +86,8 @@ fun PremiereNavigation() {
                     defaultValue = Json.encodeToString(MovieFilters()).encodeURLParameter()
                 }
             )
-        ) { backStackEntry ->
-            val encodedFilters = readStringArg(backStackEntry.arguments, FILTERS_ARG).orEmpty()
-            val initialFilters = Json.decodeFromString<MovieFilters>(encodedFilters.decodeURLQueryComponent())
-            val viewModel = koinViewModel<FilterMoviesViewModel> {
-                parametersOf(initialFilters)
-            }
+        ) {
+            val viewModel = koinViewModel<FilterMoviesViewModel>()
 
             LaunchedEffect(viewModel) {
                 viewModel.effect.collect { effect ->
@@ -111,11 +111,8 @@ fun PremiereNavigation() {
         composable(
             route = "$DETAILS_ROUTE/{imdbId}",
             arguments = listOf(navArgument("imdbId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val imdbId = readStringArg(backStackEntry.arguments, "imdbId").orEmpty()
-            val viewModel = koinViewModel<MovieDetailsViewModel> {
-                parametersOf(imdbId)
-            }
+        ) {
+            val viewModel = koinViewModel<MovieDetailsViewModel>()
 
             MovieDetailsRoute(
                 viewModel = viewModel,
