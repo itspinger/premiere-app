@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -123,7 +124,7 @@ fun FilterMoviesScreen(
                 Text(
                     text = "Filter Movies",
                     color = Color.White,
-                    style = MaterialTheme.typography.headlineMedium,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -133,7 +134,7 @@ fun FilterMoviesScreen(
                     Text(
                         text = "Clear All",
                         color = PremiereRed,
-                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -211,8 +212,8 @@ fun FilterMoviesScreen(
                 ) {
                     Text(
                         text = "Apply Filters",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.headlineSmall
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -229,7 +230,7 @@ private fun FilterSection(
         Text(
             text = title,
             color = TextBright,
-            fontSize = 20.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.ExtraBold,
             letterSpacing = 0.5.sp
         )
@@ -278,14 +279,15 @@ private fun YearRangeSection(
             )
             StyledNumberField(
                 value = minYear,
-                onValueChange = onMinYearChanged
+                onValueChange = onMinYearChanged,
+                placeholder = "1920"
             )
         }
 
         Text(
             text = "—",
             color = TextMuted,
-            style = MaterialTheme.typography.headlineMedium,
+            fontSize = 16.sp,
             modifier = Modifier.padding(top = 28.dp)
         )
 
@@ -298,7 +300,8 @@ private fun YearRangeSection(
             )
             StyledNumberField(
                 value = maxYear,
-                onValueChange = onMaxYearChanged
+                onValueChange = onMaxYearChanged,
+                placeholder = "2025"
             )
         }
     }
@@ -335,7 +338,7 @@ private fun RatingSection(
                 Text(
                     text = "⭐ ${minRating.formatToString()}",
                     color = Color.White,
-                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -373,18 +376,32 @@ private fun StyledTextField(
 @Composable
 private fun StyledNumberField(
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    placeholder: String = ""
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
+        placeholder = {
+            Text(
+                text = placeholder,
+                color = TextMuted,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
         shape = RoundedCornerShape(18.dp),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         colors = filterFieldColors(),
-        textStyle = MaterialTheme.typography.headlineSmall.copy(
+        textStyle = TextStyle(
             color = Color.White,
+            fontSize = 16.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         )
@@ -409,7 +426,7 @@ private fun GenreChip(
         Text(
             text = name,
             color = TextBright,
-            fontSize = 16.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.Medium
         )
     }

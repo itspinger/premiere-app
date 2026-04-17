@@ -16,8 +16,8 @@ class FilterMoviesViewModel(
         FilterMoviesContract.State(
             searchQuery = filters.query.orEmpty(),
             selectedGenreId = filters.genreId,
-            minYear = filters.minYear?.toString() ?: "1920",
-            maxYear = filters.maxYear?.toString() ?: "2025",
+            minYear = filters.minYear?.toString() ?: "",
+            maxYear = filters.maxYear?.toString() ?: "",
             minRating = filters.minRating ?: 0f
         )
     }
@@ -94,11 +94,12 @@ class FilterMoviesViewModel(
 
     private fun currentFilters(): MovieFilters {
         val state = state.value
+
         return MovieFilters(
             query = state.searchQuery.trim().ifBlank { null },
             genreId = state.selectedGenreId,
-            minYear = state.minYear.toIntOrNull(),
-            maxYear = state.maxYear.toIntOrNull(),
+            minYear = state.minYear.toIntOrNull()?.takeIf { state.minYear.length == 4 },
+            maxYear = state.maxYear.toIntOrNull()?.takeIf { state.maxYear.length == 4 },
             minRating = state.minRating.takeIf { it > 0f }
         )
     }
