@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.premiere.model.MovieSummary
+import com.premiere.repository.MovieFilters
 import com.premiere.repository.MovieSort
 import com.premiere.ui.theme.BackgroundDark
 import com.premiere.ui.theme.ChipGray
@@ -62,10 +66,24 @@ import com.premiere.ui.theme.TextLabel
 import com.premiere.ui.theme.TextMeta
 import com.premiere.ui.theme.TextSecondary
 import com.premiere.util.formatToString
+import com.premiere.util.formatVotes
 
 @Composable
-fun MoviesListRoute(viewModel: MoviesListViewModel) {
+fun MoviesListRoute(
+    viewModel: MoviesListViewModel,
+    onNavigateToDetails: (String) -> Unit,
+    onNavigateToFilters: (MovieFilters) -> Unit
+) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is MoviesListContract.Effect.NavigateToDetails -> onNavigateToDetails(effect.imdbId)
+                is MoviesListContract.Effect.NavigateToFilters -> onNavigateToFilters(effect.filters)
+            }
+        }
+    }
 
     MoviesListScreen(
         state = state,
@@ -277,7 +295,7 @@ private fun MoviesListContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberSaveable(saver = ScrollState.Saver) { ScrollState(0) })
                     .padding(horizontal = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -398,7 +416,7 @@ private fun MovieCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "${formatVotes(movie.imdbVotes)} votes",
+                    text = "${movie.imdbVotes.formatVotes()} votes",
                     color = TextFaded,
                     style = TextStyle(
                         fontSize = 11.sp,
@@ -478,9 +496,3 @@ private fun GenreChip(
     }
 }
 
-private fun formatVotes(votes: Int?): String {
-    if (votes == null) return "-"
-    if (votes >= 1_000_000) return "${(votes / 1_000_000f).formatToString(1)}M"
-    if (votes >= 1_000) return "${(votes / 1_000f).formatToString(0)}K"
-    return votes.toString()
-}

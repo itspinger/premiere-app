@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -22,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,29 +30,49 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.premiere.ui.theme.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.premiere.repository.MovieFilters
+import com.premiere.ui.theme.BackgroundDark
+import com.premiere.ui.theme.NavBackground
+import com.premiere.ui.theme.PremiereRed
+import com.premiere.ui.theme.PremiereRedDark
+import com.premiere.ui.theme.SliderInactive
+import com.premiere.ui.theme.SurfaceChip
+import com.premiere.ui.theme.SurfaceElevated
+import com.premiere.ui.theme.TextBright
+import com.premiere.ui.theme.TextMuted
 import com.premiere.util.formatToString
-
 
 @Composable
 fun FilterMoviesRoute(
-    viewModel: FilterMoviesViewModel
+    viewModel: FilterMoviesViewModel,
+    onApplyFilters: (MovieFilters) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is FilterMoviesContract.Effect.ApplyFilters -> onApplyFilters(effect.filters)
+                FilterMoviesContract.Effect.NavigateBack -> onNavigateBack()
+            }
+        }
+    }
 
     FilterMoviesScreen(
         state = state,

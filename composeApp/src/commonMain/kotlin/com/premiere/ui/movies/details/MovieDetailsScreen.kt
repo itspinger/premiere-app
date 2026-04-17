@@ -48,7 +48,7 @@ import com.premiere.model.MovieDetail
 import com.premiere.model.MovieImage
 import com.premiere.model.Person
 import com.premiere.util.formatToString
-
+import com.premiere.util.formatVotes
 
 @Composable
 fun MovieDetailsRoute(
@@ -341,7 +341,7 @@ private fun RatingsRow(movie: MovieDetail) {
             fontSize = 11.sp
         )
         Text(
-            text = movie.imdbVotes?.let { "${formatVotes(it)} votes" } ?: "",
+            text = movie.imdbVotes?.let { "${it.formatVotes()} votes" } ?: "",
             color = TextDim,
             fontSize = 11.sp
         )
@@ -518,11 +518,6 @@ private fun ActorsList(actors: List<Person>) {
     }
 }
 
-private fun formatVotes(votes: Int): String {
-    if (votes >= 1_000_000) return "${(votes / 1_000_000f).formatToString(1)}M"
-    if (votes >= 1_000) return "${(votes / 1_000f).formatToString(0)}K"
-    return votes.toString()
-}
 
 private fun formatMoney(amount: Long?): String {
     if (amount == null || amount == 0L) return "—"
