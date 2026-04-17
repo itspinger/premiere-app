@@ -6,6 +6,7 @@ import com.premiere.mvi.BaseViewModel
 import com.premiere.navigation.movieFilters
 import com.premiere.repository.GenresRepository
 import com.premiere.repository.MovieFilters
+import com.premiere.util.currentYear
 import kotlinx.coroutines.launch
 
 class FilterMoviesViewModel(
@@ -57,7 +58,7 @@ class FilterMoviesViewModel(
                         searchQuery = "",
                         selectedGenreId = null,
                         minYear = "1920",
-                        maxYear = "2025",
+                        maxYear = currentYear().toString(),
                         minRating = 0f
                     )
                 }

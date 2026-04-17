@@ -106,7 +106,10 @@ fun MoviesListScreen(
         containerColor = BackgroundDark,
         topBar = {
             Column {
-                HeaderBar(onFilterClick = onFilterClick)
+                HeaderBar(
+                    activeFilterCount = state.activeFilterCount,
+                    onFilterClick = onFilterClick
+                )
                 SortBar(
                     selectedSort = state.selectedSort,
                     totalCount = state.totalCount,
@@ -133,6 +136,7 @@ fun MoviesListScreen(
 
 @Composable
 private fun HeaderBar(
+    activeFilterCount: Int,
     onFilterClick: () -> Unit
 ) {
     Row(
@@ -152,20 +156,40 @@ private fun HeaderBar(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
-            onClick = onFilterClick,
-            shape = RoundedCornerShape(20.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = PremiereRed,
-                contentColor = Color.White
-            ),
-            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = "⚙ Filter",
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
-            )
+        Box {
+            Button(
+                onClick = onFilterClick,
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = PremiereRed,
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = "⚙ Filter",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+            }
+
+            if (activeFilterCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .padding(horizontal = 5.dp, vertical = 2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = activeFilterCount.toString(),
+                        color = PremiereRed,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+            }
         }
     }
 }

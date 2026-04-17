@@ -16,6 +16,15 @@ interface MoviesListContract {
     ) {
         val isEmpty: Boolean
             get() = !isLoading && errorMessage == null && movies.isEmpty()
+
+        val activeFilterCount: Int
+            get() = listOfNotNull(
+                appliedFilters.query?.takeIf { it.isNotBlank() },
+                appliedFilters.genreId,
+                appliedFilters.minYear,
+                appliedFilters.maxYear,
+                appliedFilters.minRating?.takeIf { it > 0f }
+            ).size
     }
 
     sealed interface Intent {

@@ -434,8 +434,7 @@ private fun InfoBadge(
     Column(
         modifier = modifier
             .background(SurfaceDeep, RoundedCornerShape(10.dp))
-            .padding(horizontal = 14.dp, vertical = 10.dp)
-            .height(64.dp),
+            .padding(horizontal = 14.dp, vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(

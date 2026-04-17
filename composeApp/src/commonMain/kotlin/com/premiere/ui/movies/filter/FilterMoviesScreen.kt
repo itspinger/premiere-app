@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.premiere.repository.MovieFilters
 import com.premiere.ui.theme.BackgroundDark
+import com.premiere.util.currentYear
 import com.premiere.ui.theme.NavBackground
 import com.premiere.ui.theme.PremiereRed
 import com.premiere.ui.theme.PremiereRedDark
@@ -301,7 +302,7 @@ private fun YearRangeSection(
             StyledNumberField(
                 value = maxYear,
                 onValueChange = onMaxYearChanged,
-                placeholder = "2025"
+                placeholder = currentYear().toString()
             )
         }
     }
